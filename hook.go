@@ -66,18 +66,18 @@ func getMessage(entry *logrus.Entry) (message string, err error) {
 			message = message + fmt.Sprintf("%v:%v\n", k, v)
 		}
 	}
-	if full, ok := entry.Data["err_full"]; ok {
-		message = message + fmt.Sprintf("%v", full)
-	} else {
-		file, lineNumber := GetCallerIgnoringLogMulti(2)
-		if file != "" {
-			sep := fmt.Sprintf("%s/src/", os.Getenv("GOPATH"))
-			fileName := strings.Split(file, sep)
-			if len(fileName) >= 2 {
-				file = fileName[1]
-			}
-		}
-		message = message + fmt.Sprintf("%s:%d", file, lineNumber)
-	}
+	//if full, ok := entry.Data["err_full"]; ok {
+	//	message = message + fmt.Sprintf("%v", full)
+	//} else {
+	//	file, lineNumber := GetCallerIgnoringLogMulti(2)
+	//	if file != "" {
+	//		sep := fmt.Sprintf("%s/src/", os.Getenv("GOPATH"))
+	//		fileName := strings.Split(file, sep)
+	//		if len(fileName) >= 2 {
+	//			file = fileName[1]
+	//		}
+	//	}
+	//	message = message + fmt.Sprintf("%s:%d", file, lineNumber)
+	//}
 	return
 }

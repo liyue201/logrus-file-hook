@@ -2,10 +2,11 @@ package filehook
 
 import (
 	"fmt"
+	"github.com/sirupsen/logrus"
 	"os"
 	"os/exec"
 	"strings"
-	"github.com/sirupsen/logrus"
+	"encoding/json"
 )
 
 func NewHook(file string) (f *FileHook) {
@@ -60,24 +61,15 @@ func (hook *FileHook) Levels() []logrus.Level {
 }
 
 func getMessage(entry *logrus.Entry) (message string, err error) {
-	message = message + fmt.Sprintf("%s\n", entry.Message)
-	for k, v := range entry.Data {
-		if !strings.HasPrefix(k, "err_") {
-			message = message + fmt.Sprintf("%v:%v\n", k, v)
+
+	message = message + fmt.Sprintf("%s", entry.Message)
+	if len(entry.Data) > 0 {
+		data, err := json.Marshal(entry.Data)
+		if err == nil {
+			message += " " + string(data)
 		}
 	}
-	//if full, ok := entry.Data["err_full"]; ok {
-	//	message = message + fmt.Sprintf("%v", full)
-	//} else {
-	//	file, lineNumber := GetCallerIgnoringLogMulti(2)
-	//	if file != "" {
-	//		sep := fmt.Sprintf("%s/src/", os.Getenv("GOPATH"))
-	//		fileName := strings.Split(file, sep)
-	//		if len(fileName) >= 2 {
-	//			file = fileName[1]
-	//		}
-	//	}
-	//	message = message + fmt.Sprintf("%s:%d", file, lineNumber)
-	//}
+	message += "\r\n"
+
 	return
 }
